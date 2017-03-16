@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+
+git -C ~/pacs checkout master \
+&& git -C ~/pacs pull --rebase \
+&& cp tree.php ~/pacs/htdocs/include/class.pb.appnexus.tree.php \
+&& cp parser.php ~/pacs/htdocs/include/class.pb.appnexus.treeparser.php
+
+# vim: set ft=sh
+# vim: ft=sh

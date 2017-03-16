@@ -1,0 +1,95 @@
+#!/bin/bash
+set -euo pipefail
+
+location="$1"
+license="$2"
+shift 2
+fileTypes="$@"
+if [[ -z "$fileTypes" ]]; then
+  echo '[ERROR] need to specify at least 1 file type' >&2 \
+  && exit 1
+fi
+
+declare -A _firstLine
+declare -A _comment
+declare -A _lastLine
+declare -A _fileExtension
+declare -A _afterLine
+
+read -rd '' apache2 <<EOF || true
+Copyright $(date '+%Y'), Lars Winderling
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+EOF
+
+# JAVA
+_firstLine[java]='/*'
+_comment[java]=' * '
+_lastLine[java]='*/'
+# python
+_comment[python]='# '
+_fileExtension[python]=py
+# xml
+_firstLine[xml]='<!--'
+_comment[xml]='  '
+_lastLine[xml]='-->'
+_afterLine[xml]=1
+# xml
+_firstLine[xsd]='<!--'
+_comment[xsd]='  '
+_lastLine[xsd]='-->'
+_afterLine[xsd]=1
+
+comment() {
+  local ft="$1"
+  local license="${!2}"
+  local firstLine="${_firstLine[$ft]}"
+  local comment="${_comment[$ft]}"
+  local lastLine="${_lastLine[$ft]}"
+
+  if [[ -n "$firstLine" ]]; then
+    echo "${firstLine}"
+  fi
+  while read line; do
+    if [[ -z "${line// }" ]]; then
+      echo "${comment}" | sed 's/\s*$//g'
+    else
+      echo "${comment}${line}"
+    fi
+  done <<< "$license"
+  if [[ -n "$lastLine" ]]; then
+    echo "${lastLine}"
+  fi
+  echo ""
+}
+
+
+tmpFile='/tmp/add-license.tmp-file'
+for fileType in $fileTypes; do
+  ext="*.${_fileExtension[$fileType]:-"$fileType"}"
+  afterLine="${_afterLine[$fileType]:-}"
+  while read file; do
+    if [[ -n "$afterLine" ]]; then
+      sed -n "1,${afterLine}p" "$file" > "$tmpFile"
+      comment "$fileType" "$license" >> "$tmpFile"
+      sed -n "$(( afterLine + 1)),\$p" "$file" >> "$tmpFile"
+    else
+      comment "$fileType" "$license" > "$tmpFile"
+      cat "$file" >> "$tmpFile"
+    fi
+    cat "$tmpFile" > "$file"
+  done < <(find "$location" -name "${ext}")
+done
+
+# vim: set ft=sh
+# vim: ft=sh

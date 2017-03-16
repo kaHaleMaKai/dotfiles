@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+WINEPREFIX='/usr/local/wine/data/heroes'
+WINEARCH=wine32
+GAME_DIR="${WINEPREFIX}/drive_c/Program Files/heroes-v/Heroes of Might and Magic V - Tribes of the East"
+
+cd "${GAME_DIR}/bin"
+env WINEPREFIX="$WINEPREFIX" WINEARCH="$WINEARCH" \
+  wine "H5_Game.exe"
+
+# vim: set ft=sh
+# vim: ft=sh

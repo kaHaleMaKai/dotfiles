@@ -1,0 +1,13 @@
+*.log
+.vagrant
+*.pyc
+._*
+~*
+/tags
+/.new-tags
+/.copy-of-new-tags
+/vagrant*
+/.Vagrant*
+/Vagrant*
+/d201*/
+.lvimrc

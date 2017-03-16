@@ -1,0 +1,27 @@
+#!/bin/bash
+set -euo pipefail
+
+whitelist=(
+  r2c00.pmd.local
+  r2c01.pmd.local
+  r2c02.pmd.local
+  r2c03.pmd.local
+  r2c04.pmd.local
+  r2c05.pmd.local
+  192.168.0.190
+  192.168.0.191
+  192.168.0.192
+  192.168.0.193
+  192.168.0.194
+  192.168.0.195
+  pa-hue.pmd.local
+  pm-hue.pmd.local
+  192.168.0.128
+  192.168.0.129
+)
+
+
+chromium-browser --auth-server-whitelist="$(echo "${whitelist[@]}"|tr \  ,)" $@
+
+# vim: set ft=sh
+# vim: ft=sh

@@ -1,0 +1,31 @@
+[core]
+    excludesfile = ~/.gitignore
+    editor = vim
+[merge]
+    tool = diffconflicts
+[color]
+    status = auto
+    diff = auto
+    ui = auto
+    branch = auto
+    interactive = auto
+[mergetool "diffconflicts"]
+    trustExitCode = True
+    cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+[alias]
+    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    lg = !"git lg1"
+    lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    grh = reset HEAD `git rev-parse --show-toplevel`
+[difftool]
+    prompt = False
+[user]
+    name = Lars Winderling
+    email = lars.winderling@performance-advertising.de
+[push]
+    default = current
+[diff]
+    tool = vimdiff
+[mergetool]
+    keepBackup = False
+

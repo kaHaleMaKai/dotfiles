@@ -1,0 +1,23 @@
+#compdef git-ignore
+
+tmpFile='/tmp/git-ignore.data'
+
+_git-ignore() {
+  local curcontext="$curcontext" state line
+
+  typeset -A opt_args
+  _arguments \
+    '*: :->filetype'
+
+  case $state in
+    filetype)
+      if [[ -f "$tmpFile" ]] && [[ -n "$tmpFile" ]]; then
+        _arguments "*:filetypes:($(cat "$tmpFile"))"
+      else
+        _arguments "*:filetypes:($(git-ignore list | tr , $'\n' | tee "$tmpFile"))"
+      fi
+    ;;
+  esac
+}
+
+_git-ignore "$@"

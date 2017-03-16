@@ -1,0 +1,105 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ $# = 0 ]]; then
+  set -- list
+fi
+
+sep="____________"
+header() {
+  local args="$*"
+  (( lastPos = ${#args} - 1 ))
+  local idx=0
+  local newString=''
+  while (( idx < lastPos )); do
+    newString+="${args:${idx}:1} "
+    ((idx+=1))
+  done
+  newString+="${args:${lastPos}:1}"
+  echo -e "${sep}${newString}${sep}\n "
+}
+
+notify() {
+  local summary="$1"
+  shift
+  notify-send \
+    --expire-time 10000 \
+    "$(header "$summary")" \
+    "$*"
+}
+
+hamster-notify() {
+  local cmd="$1"
+  shift
+  if [[ "$cmd" = list* ]]; then
+    notify "enlisting" "$(hamster-cli $cmd)"
+  else
+    notify "${cmd}ing" "$*"
+    hamster-cli $cmd "$*"
+  fi
+}
+
+asActivity() {
+  local category=''
+  local activity=''
+  if [[ "$*" = */* ]]; then
+    for arg in "$@"; do
+      case "$arg" in
+        /) category="$activity"
+           activity=''
+          ;;
+        */) category="${activity} ${arg//\/}"
+            activity=''
+          ;;
+        /*) category="$activity"
+            activity="${arg:1}"
+          ;;
+        */*) category="${activity} ${arg/\/*}"
+             activity="${arg/*\/}"
+          ;;
+        *) activity="${activity} ${arg}"
+      esac
+    done
+  else
+    activity="$*"
+  fi
+
+  activity="$(echo "$activity" \
+              | sed 's/^ *\| *$//g')"
+  if [[ -n "${category}" ]]; then
+      category="$(echo "$category" \
+                  | sed 's/^ *\| *$//g')"
+    echo "${activity}@${category}"
+  else
+    echo "${activity}"
+  fi
+}
+
+getPreviousActivity() {
+  shift
+  local prev="${1:-1}"
+  hamster-cli list \
+  | sed -n '3,$P' \
+  | tail -n "$(( prev + 1 ))" \
+  | head -n 1 \
+  | sed 's/^.*| //'
+}
+
+case "$1" in
+  list) if [[ "${2:-}" = 'activities' ]]; then
+          hamster-notify list-activities
+        elif [[ "${2:-}" = 'categories' ]]; then
+          hamster-notify list-categories
+        else
+          hamster-notify list
+        fi
+    ;;
+  stop) hamster-notify stop
+    ;;
+  start) shift && hamster-notify start "$*"
+    ;;
+  switch) hamster-notify start "$(getPreviousActivity "$@")"
+    ;;
+  *) hamster-notify start "$(asActivity "$@")"
+    ;;
+esac

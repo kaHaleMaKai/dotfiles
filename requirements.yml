@@ -1,0 +1,7 @@
+# Requirements, install using
+# ansible-galaxy install -r requirements.yml
+
+# from git
+- src: https://github.com/kahalemakai/ansible-ripgrep
+  name: ripgrep
+#  version: master # this has to be a tag.

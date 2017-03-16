@@ -1,0 +1,7 @@
+- hosts: kauai
+  tags: bin
+  tasks:
+    - name: setup bin
+      copy:
+        src=bin
+        path="{{ ansible_user_dir }}/bin"

@@ -1,0 +1,7 @@
+- hosts: kauai
+  tags: ssh
+  tasks:
+    - name: copy ssh config
+      copy:
+        src=ssh/config
+        dest="{{ ansible_user_dir }}/.ssh/config"

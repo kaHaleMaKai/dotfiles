@@ -1,0 +1,14 @@
+- hosts: kauai
+  tags: awesome
+  tasks:
+    - name: copy awesome files in place
+      copy:
+        src=awesome
+        dest="{{ ansible_user_dir }}/.config/awesome"
+    - name: install awesome wm and xcompmgr
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - awesome
+        - xcompmgr

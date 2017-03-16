@@ -1,0 +1,23 @@
+- hosts: kauai
+  tags: zsh
+  tasks:
+    - name: install zsh
+      package:
+        name: zsh
+        state: present
+    - name: copy .zshrc
+      copy:
+        src=zsh/dot.zshrc
+        dest="{{ ansible_user_dir }}/.zshrc"
+    - name: setup zsh config dir
+      file:
+        path="{{ ansible_user_dir }}/.config/zsh/autocomplete"
+    - name: copy autocomplete functions
+      copy:
+        src=zsh/autocomplete
+        dest="{{ ansible_user_dir }}/.config/zsh/autocomplete"
+    - name: install oh-my-zsh
+      shell: >
+        "wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh"
+      args:
+        creates: "{{ ansible_user_dir }}/.oh-my-zsh"

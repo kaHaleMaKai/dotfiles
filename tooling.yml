@@ -1,0 +1,6 @@
+---
+
+- hosts: kauai
+  roles:
+    - role: ripgrep
+      tags: [rg, ripgrep]

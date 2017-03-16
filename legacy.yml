@@ -1,0 +1,11 @@
+- hosts: kauai
+  tags: legacy
+  tasks:
+    - name: install legacy packages
+      tags: legacy
+      apt:
+        deb="{{ item }}"
+      with_items:
+        - "http://download.skype.com/linux/skype-ubuntu-precise_4.3.0.37-1_i386.deb"
+        - "https://dl.dropboxusercontent.com/u/8593574/Spotify/spotify-client_0.8.8.323.gd143501.250-1_amd64.deb"
+

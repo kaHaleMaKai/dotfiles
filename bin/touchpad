@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eu
+
+if [[ "${1:-on}" = 'off' ]]; then
+  new_state=0
+else
+  new_state=1
+fi
+
+while read control; do
+  xinput set-prop "$control" 'Device Enabled' "$new_state"
+done < <(xinput list \
+         | grep 'SynPS\|TrackPoint' \
+         | sed 's/\(^.*id=\)\([0-9]*\)\(.*\)/\2/g')
+
+# vim: set ft=sh
+# vim: ft=sh

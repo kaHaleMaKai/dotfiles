@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+
+java -jar "${HOME}/bin-resources/avro-tools-1.7.7.jar" $@
+
+# vim: set ft=sh
+# vim: ft=sh

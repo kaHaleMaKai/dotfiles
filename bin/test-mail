@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+
+notify-send -t 10000 'test' 'test mail found'
+
+# vim: set ft=sh
+# vim: ft=sh

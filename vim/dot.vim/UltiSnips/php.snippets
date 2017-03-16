@@ -1,0 +1,17 @@
+snippet map "map"
+array($1 => ${2:val)}$0
+endsnippet
+
+snippet val "val"
+$1, $2 => ${3:val }
+endsnippet
+
+snippet thr "throw new Exception"
+throw new Exception($1);$0
+endsnippet
+
+snippet msg "logged exception"
+\$msg = "$1";
+\$this->logger->error(\$msg);
+throw new ${2:Exception}(\$msg);$0
+endsnippet

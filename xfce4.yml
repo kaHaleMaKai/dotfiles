@@ -1,0 +1,7 @@
+- hosts: kauai
+  tags: xfce4
+  tasks:
+    - name: copy xfce4 files in place
+      copy:
+        src=xfce4
+        dest="{{ ansible_user_dir }}/.config/xfce4"

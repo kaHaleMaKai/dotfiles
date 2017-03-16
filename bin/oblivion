@@ -1,0 +1,55 @@
+#!/bin/bash
+set -euo pipefail
+
+export WINEPREFIX='/opt/wine/oblivion/win32'
+export WINEARCH=win32
+DISK='/media/oblivion/disk-1'
+GAME_DIR="$WINEPREFIX/drive_c/Program Files/Bethesda Softworks/Oblivion"
+
+mountDisk() {
+  if ! mountpoint -q "$DISK"; then
+    sudo mount -o loop -t iso9660 /media/oblivion/isos/disk-1.iso /media/oblivion/disk-1
+  fi
+}
+
+unmountDisk() {
+  if mountpoint -q "$DISK"; then
+    sudo umount /media/oblivion/disk-1
+  fi
+}
+
+printHelpMsg() {
+  cat <<-EOF
+Setup and start Elder Scrolls IV: Oblivion
+Arguments:
+
+path      print the path of the game installation
+start     mount the iso file and start the game
+debug     start the game in wine debug mode
+config    mount the iso file and run winecfg
+stop      unmount the iso file
+help      print this dialog
+
+EOF
+}
+
+execute() {
+  case "${1}" in
+    path) echo "$GAME_DIR"
+      ;;
+    start) mountDisk && wine "$GAME_DIR/OblivionLauncher.exe"&
+      ;;
+    debug) export WINEDEBUG='warn+all' && execute start
+      ;;
+    config) mountDisk && winecfg&
+      ;;
+    stop) unmountDisk
+      ;;
+    *) printHelpMsg
+  esac
+}
+
+execute "${1:-}"
+
+# vim: set ft=sh
+# vim: ft=sh

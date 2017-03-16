@@ -1,0 +1,20 @@
+" generate methods
+"Generate
+"GenerateAntBuild
+"GenerateConstructor
+"GenerateCreateUI
+"GenerateDataMethod
+"GenerateDTD
+"GenerateEquals
+"GenerateExternalization
+"GenerateGetter
+"GenerateGetterAndSetter
+"GenerateGroup
+"GenerateJavadoc
+"GeneratePattern
+"GenerateSetter
+"GenerateSetUpMethod
+"GenerateSuperMethodCall
+"GenerateTearDownMethod
+"GenerateTestMethod
+"GenerateXmlTag

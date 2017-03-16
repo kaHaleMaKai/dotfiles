@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+exec >/dev/null 2>&1
+
+pactl unload-module module-bluetooth-discover
+pactl load-module module-bluetooth-discover
+
+# vim: set ft=sh
+# vim: ft=sh

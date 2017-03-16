@@ -1,0 +1,119 @@
+#!/bin/bash
+set -euo pipefail
+
+LDAP_SEARCH_DEBUG=0
+
+query() {
+  local base="$1"
+  shift
+  local cmd=ldapsearch
+  if [[ $LDAP_SEARCH_DEBUG -eq 1 ]]; then
+    cmd="echo ${cmd}"
+  fi
+  $cmd \
+    -b "$base" \
+    -D lwinderling@PMD.LOCAL \
+    -H ldap://ldap.pmd.local \
+    -W "$@"
+}
+
+baseQuery() {
+  query dc=pmd,dc=local "$@"
+}
+
+
+simpleFilter() {
+  if [[ $LDAP_SEARCH_DEBUG -eq 1 ]]; then
+    cat
+    return 0
+  fi
+  local attribute="${1:-dn}"
+  local matcher='.*CN='
+  local grepArgs='-A 2'
+  case "$attribute" in
+    sAMAccountName) local matcher='' \
+                    && local grepArgs=''
+      ;;
+  esac
+  grep $grepArgs "${attribute}:${matcher}" \
+    | awk 'BEGIN{p=""}/^[^-]/{if($0~"^[^ ]"&&p!=""){print p;p=""}gsub("^ ","");p=p$0}END{if(NR==1)print p}' \
+    | sed 's/^\('"${attribute}"': \)\(.*$\)/('"${attribute}"'=\2)/'
+}
+
+filter() {
+  if [[ $LDAP_SEARCH_DEBUG -gt 0 ]]; then
+    cat
+    return 0
+  fi
+  local attribute="${1:-dn}"
+  simpleFilter "$attribute" \
+    | sort \
+    | uniq \
+    | grep 'DC=local)$'
+}
+
+userSearch() {
+  local filter="(&(objectClass=person)(|(cn=${*})(sAMAccountName="${*}")))"
+  baseQuery "$filter"
+}
+
+groupSearch() {
+  local filter="(&(objectClass=group)(|(cn=${*})(sAMAccountName="${*}")))"
+  baseQuery "$filter"
+}
+
+printHelp() {
+  cat <<-'EOF'
+Usage: query-ldap-for OPTION VALUE [VALUE [...]]
+Query the ldap (active directory).
+
+The following arguments are supported:
+  groups-of USERNAME        list all groups for user USERNAME
+  users-of GROUPNAME        list all users of group GROUPNAME
+  user USERNAME             check if user USERNAME exists
+  user-dn USERNAME          print the dn of user USERNAME
+  group GROUPNAME           check if the group GROUPNAME exists
+  group-dn GROUPNAME        print the dn of group GROUPNAME
+  children-of DN            print all users below DN
+  all-about-user USERNAME   print all information about user USERNAME
+  all-about-user GROUPNAME  print all information about user GROUPNAME
+  help                      print this help message
+EOF
+}
+
+type="${1:-help}"
+if (( $# > 0 )); then
+  shift
+fi
+if [[ "$type" = 'debug' ]]; then
+  LDAP_SEARCH_DEBUG=1 \
+  type="${1:-help}"
+  if (( $# > 0 )); then
+    shift
+  fi
+fi
+case "$type" in
+  groups-of) userSearch "$@" | filter memberOf
+    ;;
+  users-of) groupSearch "$@" | filter member
+    ;;
+  user-dn) userSearch "$@" | filter
+    ;;
+  user) userSearch "$@" | simpleFilter sAMAccountName
+    ;;
+  all-about-user) userSearch "$@"
+    ;;
+  all-about-group) groupSearch "$@"
+    ;;
+  group-dn) groupSearch "$@" | filter
+    ;;
+  group-dn) groupSearch "$@" | filter sAMAccountName
+    ;;
+  children-of) query "$@"| filter
+    ;;
+  *) printHelp
+esac
+
+
+# vim: set ft=sh
+# vim: ft=sh

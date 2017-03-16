@@ -1,0 +1,10 @@
+- hosts: kauai
+  tags: git
+  tasks:
+    - name: configure git globally
+      copy:
+        src="git/dot.git{{ item }}"
+        dest="{{ ansible_user_dir }}/.git{{ item }}"
+      with_items:
+        - config
+        - ignore

@@ -1,0 +1,28 @@
+#!/bin/bash
+set -euo pipefail
+
+package="${1//:*}"
+version="${1##*:}"
+
+is-snapshot() {
+  echo "$version" | grep SNAPSHOT &>/dev/null
+}
+
+get-endpoint() {
+  if is-snapshot; then
+    echo "snapshots"
+  else
+    echo "resleases"
+  fi
+}
+
+get-credentials() {
+  local credentials="$(sed 's/.*=//' "${HOME}/.nexus.properties" | tr "\n" :)"
+  echo "${credentials:0:-1}"
+}
+
+curl --request DELETE --write "%{http_code} %{url_effective}\\n" --user "$(get-credentials)" "http://nexus.pmd.local:8081/nexus/content/repositories/$(get-endpoint)/${package//.//}/${version}"
+
+
+# vim: set ft=sh
+# vim: ft=sh

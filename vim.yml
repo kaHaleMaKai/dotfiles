@@ -1,0 +1,20 @@
+- hosts: kauai
+  tags: vim
+  tasks:
+    - name: install vim
+      package:
+        name: vim-gtk-py2
+        state: present
+    - name: copy .vimrc
+      copy:
+        src=vim/dot.vimrc
+        dest="{{ ansible_user_dir }}/.vimrc"
+    - name: copy vim-related files
+      copy:
+        src=vim/dot.vim
+        dest="{{ ansible_user_dir }}/.vim"
+    - name: install neobundle for vim
+      shell: >
+        "curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh"
+      args:
+        creates: "{{ ansible_user_dir }}/.vim/bundle/neobundle.vim"

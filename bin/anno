@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export WINEPREFIX="/usr/local/wine/play-on-linux/wineprefix/anno1404"
+cd "${WINEPREFIX}/drive_c/GOG-Games/Anno-1404-Gold-Edition"
+wine Addon.exe
+
+#export WINEPREFIX="/usr/local/wine/data/anno-1404"
+#cd "${WINEPREFIX}/drive_c/GOG Games/Anno 1404 Gold Edition"
+#wine-development Addon.exe

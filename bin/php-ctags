@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+[ -n "${1:-}" ] \
+&& ctags -R --fields=+aimlS --languages=php -f .new-tags \
+&& cp .new-tags .copy-of-new-tags \
+&& mv .copy-of-new-tags tags \
+&& rm "$1"
+
+# vim: set ft=sh
+# vim: ft=sh

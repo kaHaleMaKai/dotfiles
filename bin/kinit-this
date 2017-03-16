@@ -1,0 +1,4 @@
+#!/bin/sh
+
+kinit -kt /etc/security/keytabs/lwinderling.keytab lwinderling \
+&& klist

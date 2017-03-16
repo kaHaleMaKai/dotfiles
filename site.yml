@@ -1,0 +1,10 @@
+---
+
+- include: ssh.yml
+- include: git.yml
+- include: zsh.yml
+- include: vim.yml
+- include: awesome.yml
+- include: bin.yml
+- include: legacy.yml
+- include: xfce4.yml

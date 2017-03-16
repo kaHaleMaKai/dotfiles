@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+if [ $# -eq 0 ]; then
+  echo '[INFO] need name of script as argument' >&2
+  exit 1
+fi
+
+php5.6 \
+  -d xdebug.remote_enable=On \
+  -d xdebug.remote_autostart=On \
+  "$@"
+
+# vim: ft=sh
