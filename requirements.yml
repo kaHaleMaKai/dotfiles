@@ -4,4 +4,6 @@
 # from git
 - src: https://github.com/kahalemakai/ansible-ripgrep
   name: ripgrep
+- src: https://github.com/kahalemakai/ansible-build-awesome-wm
+  name: build-awesome-wm
 #  version: master # this has to be a tag.

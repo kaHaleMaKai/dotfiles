@@ -44,6 +44,9 @@ for src in $(ls $ANSIBLE_DIR/bin/ansible*); do
   [[ -L "$link" ]] || ln -s -T "$src"
 done
 
+INFO install ansible requirements
+
+~/bin/ansible/ansible-playbook site.yml -c local
 
 # vim: set ft=sh
 # vim: ft=sh

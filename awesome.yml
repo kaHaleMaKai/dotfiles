@@ -1,6 +1,6 @@
 - hosts: kauai
   tags: awesome
-  tasks:
+  pre_tasks:
     - name: copy awesome files in place
       copy:
         src=awesome
@@ -12,3 +12,5 @@
       with_items:
         - awesome
         - xcompmgr
+  roles:
+    - build-awesome-wm
