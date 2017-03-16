@@ -4,4 +4,4 @@
     - name: setup bin
       copy:
         src=bin
-        path="{{ ansible_user_dir }}/bin"
+        dest="{{ ansible_user_dir }}/bin"

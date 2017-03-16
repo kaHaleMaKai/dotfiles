@@ -1,8 +1,8 @@
 ---
 
-- include: ssh.yml
 - include: git.yml
 - include: zsh.yml
+- include: ssh.yml
 - include: vim.yml
 - include: awesome.yml
 - include: bin.yml

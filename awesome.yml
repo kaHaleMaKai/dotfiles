@@ -2,15 +2,15 @@
   tags: awesome
   pre_tasks:
     - name: copy awesome files in place
-      copy:
+      synchronize:
         src=awesome
         dest="{{ ansible_user_dir }}/.config/awesome"
     - name: install awesome wm and xcompmgr
       package:
         name: "{{ item }}"
         state: present
+      become: yes
       with_items:
-        - awesome
         - xcompmgr
   roles:
     - build-awesome-wm

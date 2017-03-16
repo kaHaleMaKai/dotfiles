@@ -1,6 +1,10 @@
 - hosts: kauai
   tags: git
   tasks:
+    - name: install git
+      package:
+        name: git
+        state: present
     - name: configure git globally
       copy:
         src="git/dot.git{{ item }}"

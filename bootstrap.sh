@@ -46,7 +46,12 @@ done
 
 INFO install ansible requirements
 
-~/bin/ansible/ansible-playbook site.yml -c local
+# currently this misbehaves
+# exit status != 0 even after successful installation
+# execute twice to check if error is persistent
+
+~/bin/ansible/ansible-playbook site.yml -c local \
+|| ~/bin/ansible/ansible-playbook site.yml -c local
 
 # vim: set ft=sh
 # vim: ft=sh
