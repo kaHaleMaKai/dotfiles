@@ -44,14 +44,25 @@ for src in $(ls $ANSIBLE_DIR/bin/ansible*); do
   [[ -L "$link" ]] || ln -s -T "$src"
 done
 
-INFO install ansible requirements
+# create this file if not exists
+# to have awesome start anyway
+# (my-theme depends on it)
+
+[[ -e "${HOME}/.background-image" ]] \
+|| touch "${HOME}/.background-image"
 
 # currently this misbehaves
 # exit status != 0 even after successful installation
 # execute twice to check if error is persistent
 
-~/bin/ansible/ansible-playbook site.yml -c local \
-|| ~/bin/ansible/ansible-playbook site.yml -c local
+INFO install ansible requirements
+
+~/bin/ansible/ansible-galaxy -r requirements.yml \
+|| ~/bin/ansible/ansible-galaxy -r requirements.yml \
+&& INFO successfully installed requiredments \
+|| (ERROR failed to install requirements && exit 1)
+
+~/bin/ansible/ansible-playbook site.yml -c local --ask-sudo --ask-vault-pass
 
 # vim: set ft=sh
 # vim: ft=sh
