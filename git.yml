@@ -5,6 +5,7 @@
       package:
         name: git
         state: present
+      become: yes
     - name: configure git globally
       copy:
         src="git/dot.git{{ item }}"

@@ -30,8 +30,11 @@ mkdir -p "$VENV_DIR"
 mkdir -p "$BIN_DIR"
 mkdir -p "${BIN_DIR}/ansible"
 
-INFO install virtualenv
-sudo apt install virtualenv
+INFO install keepassx and curl
+sudo apt install keepassx curl
+
+INFO install virtualenv and ansible dependencies
+sudo apt install virtualenv libpython-dev openssl gcc g++ libssl-dev
 
 INFO install ansible
 virtualenv -p python2.7 "$ANSIBLE_DIR"
@@ -41,7 +44,7 @@ INFO creating links for ansible under ~/bin
 for src in $(ls $ANSIBLE_DIR/bin/ansible*); do
   name="$(basename "$src")"
   link="${BIN_DIR}/ansible/${name}"
-  [[ -L "$link" ]] || ln -s -T "$src"
+  [[ -L "$link" ]] || ln -s -T "$src" "$link"
 done
 
 # create this file if not exists
@@ -51,14 +54,14 @@ done
 [[ -e "${HOME}/.background-image" ]] \
 || touch "${HOME}/.background-image"
 
-# currently this misbehaves
+# currently this missbehaves
 # exit status != 0 even after successful installation
 # execute twice to check if error is persistent
 
 INFO install ansible requirements
 
-~/bin/ansible/ansible-galaxy -r requirements.yml \
-|| ~/bin/ansible/ansible-galaxy -r requirements.yml \
+~/bin/ansible/ansible-galaxy install -r requirements.yml \
+|| ~/bin/ansible/ansible-galaxy install -r requirements.yml \
 && INFO successfully installed requiredments \
 || (ERROR failed to install requirements && exit 1)
 
