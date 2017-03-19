@@ -6,5 +6,5 @@
 - include: vim.yml
 - include: awesome.yml
 - include: bin.yml
-- include: legacy.yml
 - include: xfce4.yml
+- include: ripgrep.yml

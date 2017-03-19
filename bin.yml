@@ -2,6 +2,6 @@
   tags: bin
   tasks:
     - name: setup bin
-      copy:
-        src=bin
+      synchronize:
+        src=bin/
         dest="{{ ansible_user_dir }}/bin"

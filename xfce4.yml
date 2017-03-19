@@ -3,5 +3,5 @@
   tasks:
     - name: copy xfce4 files in place
       synchronize:
-        src: xfce4
+        src: xfce4/
         dest: "{{ ansible_user_dir }}/.config/xfce4"
