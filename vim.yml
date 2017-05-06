@@ -6,14 +6,29 @@
         name: vim-gtk
         state: present
       become: yes
-    - name: copy .vimrc
-      copy:
-        src=vim/dot.vimrc
-        dest="{{ ansible_user_dir }}/.vimrc"
-    - name: copy vim-related files
-      copy:
-        src=vim/dot.vim/
-        dest="{{ ansible_user_dir }}/.vim"
+    - name: create ~/.vim
+      file:
+        path: "{{ ansible_user_dir }}/.vim"
+        state: directory
+    - name: create ~/.vim/sessions
+      file:
+        path: "{{ ansible_user_dir }}/.vim/sessions"
+        state: directory
+    - name: link vim files
+      file:
+        src: "{{ playbook_dir}}/vim/{{ item.src }}"
+        dest: "{{ ansible_user_dir }}/{{ item.dest }}"
+        state: link
+        force: yes
+      with_items:
+        - src: dot.vimrc
+          dest: .vimrc
+        - src: dot.vim/after
+          dest: .vim/after
+        - src: dot.vim/UltiSnips
+          dest: .vim/UltiSnips
+        - src: dot.vim/vimrc-res
+          dest: .vim/vimrc-res
     - name: install neobundle for vim
       shell: >
         curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
