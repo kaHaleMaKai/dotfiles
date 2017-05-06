@@ -30,8 +30,8 @@ mkdir -p "$VENV_DIR"
 mkdir -p "$BIN_DIR"
 mkdir -p "${BIN_DIR}/ansible"
 
-INFO install keepassx and curl
-sudo apt install keepassx curl
+INFO install etckeeper, keepassx and curl
+sudo apt install etckeeper keepassx curl
 
 INFO install virtualenv and ansible dependencies
 sudo apt install virtualenv libpython-dev openssl gcc g++ libssl-dev
