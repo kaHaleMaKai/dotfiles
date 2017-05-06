@@ -1,4 +1,3 @@
-" vimrc from ansible
 if !1 | finish | endif
 
 set foldmethod=marker
@@ -8,8 +7,10 @@ if has('vim_starting') "{{{1
   if &compatible
     set nocompatible
   endif
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+  set rtp+=~/.vim/bundle/neobundle.vim/
 endif " 1}}}"
+
+set rtp+=~/git/fzf
 
 " global variables {{{1
 if !exists("true")
@@ -79,6 +80,7 @@ set nu
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+set grepprg=rg\ --vimgrep
 " }}}
 "
 " source vim resources {{{1
@@ -99,10 +101,6 @@ let g:syntastic_auto_loc_list = true
 let g:syntastic_check_on_open = true
 let g:syntastic_check_on_wq = false
 let g:syntastic_mode_map = { 'passive_filetypes': ['java'] }
-" 2}}}
-" CtrlP {{{
-let g:ctrlp_extensions = ['funky']
-let g:ctrlp_user_command = GetCtrlPCommand()
 " 2}}}
 " ultisnippets {{{2
 let g:UltiSnipsJumpBackwardTrigger = '<c-j>'
@@ -159,6 +157,9 @@ let g:php_manual_online_search_shortcut = ''
 " python-related {{{2
 let g:SimpylFold_docstring_preview=1
 " 2}}}
+" LimeLight {{{2
+let g:limelight_conceal_ctermfg = '242'
+" 2}}}
 " 1}}}
 
 " autocommands {{{1
@@ -204,7 +205,7 @@ if 'VIRTUAL_ENV' in os.environ:
   project_base_dir = os.environ['VIRTUAL_ENV']
   sys.path.insert(0, project_base_dir)
   activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-  execfile(activate_this, dict(__file__=activate_this))
+  exec(compile(open(activate_this, "rb").read(), activate_this, 'exec'), dict(__file__=activate_this), locals())
 EOF
 endfunc
 

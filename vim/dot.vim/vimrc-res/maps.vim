@@ -29,8 +29,5 @@ nnoremap <silent> <leader>nsf :NERDTreeFind<CR> \| :wincmd p<CR>
 nnoremap <silent> <leader>ng :NERDTreeGitRoot<CR>
 nnoremap <silent> <leader>nF :NERDTreeGitRootFind<CR>
 nnoremap <silent> <leader>nsF :NERDTreeGitRootFind<CR> \| :wincmd p<CR>
-nnoremap <Leader>fu :CtrlPFunky<Cr>
-nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 nnoremap <silent> gs :GitGutterStageHunk<CR>
 nnoremap <silent> gr :GitGutterRevertHunk<CR>
-nnoremap <silent> gtt :TlistToggle<CR>

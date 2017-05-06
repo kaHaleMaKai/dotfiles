@@ -140,17 +140,81 @@ command!
       \  :silent! call <sid>TruncateSpaces(<line1>, <line2>)
 " 1}}}
 
-"func! s:GotoPreviousFile() abort "{{{
-  "if !exists('w:prev_files')
-    "return
-  "endif
-  "let idx = w:prev_files_idx
-  "let prev_file = w:prev_files[idx]
-  "exe 'e '.prev_file
-"endfunc "}}}
+func! s:HawaiianMappings() abort "{{{
+  inoremap ¨A Ā
+  inoremap ¨a ā
+  inoremap ¨E Ē
+  inoremap ¨e ē
+  inoremap ¨I Ī
+  inoremap ¨i ī
+  inoremap ¨O Ō
+  inoremap ¨o ō
+  inoremap ¨U Ū
+  inoremap ¨u ū
+  inoremap ä ʻ
+endfunc "}}}
 
+command!
+      \ -nargs=0
+      \ HawaiianBingings
+      \ :silent! call <sid>HawaiianMappings()
 
 "command!
       "\ :silent! call <sid>GotoPreviousFile()
 
 " vim: foldmethod=marker
+
+func! s:InGitRepo() abort "{{{
+  return finddir('.git', '.;', 1) != ''
+endfunc "}}}
+
+" Likewise, Files command with preview window
+command!
+      \ -bang
+      \ -nargs=?
+      \ -complete=dir FzfFiles
+      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+" Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
+command!
+      \ -bang
+      \ -nargs=*
+      \ Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
+
+
+" Rg including .gitignore'd files
+command!
+      \ -bang
+      \ -nargs=*
+      \ Rgu
+      \ call fzf#vim#grep(
+      \   'rg -u --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
+
+
+func! s:FuzzyFindFiles(bang, ...) abort "{{{
+  let command = s:InGitRepo() ? 'GitFiles' : 'FzfFiles'
+  exe command
+        \ . (a:bang ? '!' : '') . ' '
+        \ . join(a:000)
+endfunc "}}}
+
+command!
+      \ -nargs=?
+      \ FuzzyFindFiles
+      \ call <sid>FuzzyFindFiles(<bang>0, <q-args>)
+
+" Command for git grep
+" - fzf#vim#grep(command, with_column, [options], [fullscreen])
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep('git grep --line-number '.shellescape(<q-args>), 0, <bang>0)
+
+nnoremap <silent> <C-p> :FuzzyFindFiles<CR>
+nnoremap <silent> <leader>ff :FzfFiles<CR>
